@@ -3,6 +3,7 @@ import AppLayout from "@/components/AppLayout.vue";
 import { useRootStore } from "@/stores/root";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import CocktailThumb from "@/components/CocktailThumb.vue";
 
 const rootStore = useRootStore()
 rootStore.getIngredients()
@@ -19,7 +20,7 @@ function getCocktails() {
 <template>
     <AppLayout imgURL="/src/assets/img/bg-1.jpg">
         <div class="wrapper">
-            <div class="info">
+            <div v-if="!ingredient || !cocktails" class="info">
                 <div class="title">Choose your drink</div>
                 <div class="line"></div>
                 <div class="select-wrapper">
@@ -37,6 +38,13 @@ function getCocktails() {
                     Find delicious cocktail recipes by ingredient through our cocktail generator.
                 </div>
                 <img src="/src/assets/img/cocktails.png" alt="Cocktails" class="img">
+            </div>
+            <div v-else class="info">
+                <div class="title">COCKTAILS WITH {{ ingredient }}</div>
+                <div class="line"></div>
+                <div class="cocktails">
+                    <CocktailThumb v-for="cocktail in cocktails" :key="cocktail.idDrink" :cocktail="cocktail"/>
+                </div>
             </div>
         </div>
     </AppLayout>
@@ -70,4 +78,15 @@ function getCocktails() {
 
 .img
     margin-top: 60px
+
+.cocktails
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-top: 60px
+    max-height: 400px
+    overflow-y: auto
+    flex-wrap: wrap
+
+
 </style>
