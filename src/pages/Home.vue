@@ -13,10 +13,18 @@ function getCocktails() {
     rootStore.getCocktails(rootStore.ingredient)
 }
 
+function removeIngredient() {
+    rootStore.setIngredient(null)
+}
+
 </script>
 
 <template>
-    <AppLayout imgURL="/src/assets/img/bg-1.jpg">
+    <AppLayout
+        imgURL="/src/assets/img/bg-1.jpg"
+        :backFunc="removeIngredient"
+        :is-back-button-visible="!!ingredient"
+    >
         <div class="wrapper">
             <div v-if="!ingredient || !cocktails" class="info">
                 <div class="title">Choose your drink</div>
