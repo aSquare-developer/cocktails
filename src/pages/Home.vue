@@ -2,17 +2,15 @@
 import AppLayout from "@/components/AppLayout.vue";
 import { useRootStore } from "@/stores/root";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
 import CocktailThumb from "@/components/CocktailThumb.vue";
 
 const rootStore = useRootStore()
 rootStore.getIngredients()
 
-const { ingredients, cocktails } = storeToRefs(rootStore)
-const ingredient = ref(null)
+const { ingredients, ingredient, cocktails } = storeToRefs(rootStore)
 
 function getCocktails() {
-    rootStore.getCocktails(ingredient.value)
+    rootStore.getCocktails(rootStore.ingredient)
 }
 
 </script>
@@ -24,7 +22,15 @@ function getCocktails() {
                 <div class="title">Choose your drink</div>
                 <div class="line"></div>
                 <div class="select-wrapper">
-                    <el-select v-model="ingredient" @change="getCocktails" placeholder="Choose main ingredient" size="large" class="select">
+                    <el-select
+                        v-model="rootStore.ingredient"
+                        @change="getCocktails"
+                        placeholder="Choose main ingredient"
+                        size="large"
+                        class="select"
+                        filterable
+                        allow-create
+                    >
                         <el-option
                             v-for="item in ingredients"
                             :key="item.strIngredient1"
@@ -81,7 +87,6 @@ function getCocktails() {
 
 .cocktails
     display: flex
-    justify-content: space-between
     align-items: center
     margin-top: 60px
     max-height: 400px
