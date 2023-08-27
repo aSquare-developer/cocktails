@@ -7,8 +7,12 @@ import { ref } from "vue";
 const rootStore = useRootStore()
 rootStore.getIngredients()
 
-const { ingredients } = storeToRefs(rootStore)
+const { ingredients, cocktails } = storeToRefs(rootStore)
 const ingredient = ref(null)
+
+function getCocktails() {
+    rootStore.getCocktails(ingredient.value)
+}
 
 </script>
 
@@ -19,7 +23,7 @@ const ingredient = ref(null)
                 <div class="title">Choose your drink</div>
                 <div class="line"></div>
                 <div class="select-wrapper">
-                    <el-select v-model="ingredient" placeholder="Choose main ingredient" size="large" class="select">
+                    <el-select v-model="ingredient" @change="getCocktails" placeholder="Choose main ingredient" size="large" class="select">
                         <el-option
                             v-for="item in ingredients"
                             :key="item.strIngredient1"
