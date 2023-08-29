@@ -3,13 +3,15 @@ import axios from "axios";
 import AppLayout from "@/components/AppLayout.vue";
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
-import { COCKTAIL_RANDOM } from "@/constants"
+import { COCKTAIL_RANDOM, INGREDIENT_PIC } from "@/constants"
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+
 
 const route = useRoute()
 const router = useRouter()
 
 const cocktail = ref(null)
-const cocktailId = computed(() => route.path.split('/').pop())
 
 async function getCocktail() {
     const data = await axios.get(COCKTAIL_RANDOM)
@@ -22,9 +24,7 @@ const ingredients = computed(() => {
     for(let i = 1; i <= 15; i++) {
         if(! cocktail.value[`strIngredient${i}`]) break
 
-        const ingredient = {}
-        ingredient.name = cocktail.value[`strIngredient${i}`]
-        ingredient.measure = cocktail.value[`strMeasure${i}`]
+        const ingredient = cocktail.value[`strIngredient${i}`]
 
         ingredients.push(ingredient)
     }
@@ -46,6 +46,17 @@ getCocktail()
                 <div class="info">
                     <div class="title">{{ cocktail.strDrink }}</div>
                     <div class="line"></div>
+                    <div class="slider">
+                        <swiper :slides-per-view="3" :space-between="50" class="swiper">
+                            <swiper-slide
+                                v-for="(ingredient, index) in ingredients"
+                                :key="index"
+                            >
+                                <img :src="`${INGREDIENT_PIC}${ingredient}-Small.png`" alt="">
+                                <div class="name">{{ ingredient }}</div>
+                            </swiper-slide>
+                        </swiper>
+                    </div>
                     <div class="instructions">
                         {{ cocktail.strInstructions }}
                     </div>
@@ -58,5 +69,12 @@ getCocktail()
 <style lang="sass" scoped>
 @import "../assets/styles/main"
 
+.slider
+    padding: 50px 0
 
+.swiper
+    width: 586px
+
+.name
+    padding-top: 20px
 </style>
