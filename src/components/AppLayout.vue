@@ -1,5 +1,8 @@
 <script setup>
+import { useRoute, useRouter } from "vue-router";
 import { Back } from '@element-plus/icons-vue'
+import { computed } from "vue";
+import { ROUTES_PATHS } from "@/constants";
 
 const props = defineProps({
     imgURL: {
@@ -16,6 +19,19 @@ const props = defineProps({
     }
 })
 
+const route = useRoute()
+const router = useRouter()
+
+const routeName = computed(() => route.name)
+
+function goForCocktailRandom() {
+    router.push(ROUTES_PATHS.COCKTAIL_RANDOM)
+
+    // If we on same page
+    if (routeName.value === ROUTES_PATHS.COCKTAIL_RANDOM) {
+        router.go() // Если go() без параметров, происходит принудительная перезагрузка страницы
+    }
+}
 </script>
 
 <template>
@@ -30,7 +46,7 @@ const props = defineProps({
                       circle
                       class="back"
                       @click="backFunc"/>
-              <el-button class="btn">Get random cocktail</el-button>
+              <el-button class="btn" @click="goForCocktailRandom">Get random cocktail</el-button>
           </div>
           <slot />
       </div>
